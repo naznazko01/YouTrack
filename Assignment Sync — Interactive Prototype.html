@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assignment Sync — Interactive Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0f1d45;--navy2:#1c2b5e;--navy3:#26376f;--teal:#12a594;--teal-d:#12786b;--teal-l:#d9f5ef;--bg:#eef2f7;--card:#fff;--ink:#0f1b3d;--muted:#6b7690;--line:#e6eaf1;
+--red:#d93a3a;--red-l:#fde8e8;--amb:#c77a0a;--amb-l:#fff1dc;--blue:#3157d5;--blue-l:#e5ecff;--grey-l:#eef1f5;--green:#1c9a5a;--green-l:#e0f6ea}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);font-size:14px}
+h1,h2,h3{font-family:Poppins,Inter,sans-serif;margin:0;letter-spacing:-.01em}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input{font:inherit}
+svg.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.hidden{display:none!important}
+.logo{display:flex;align-items:center;gap:12px;font-family:Poppins;font-weight:600;font-size:18px}
+.mark{width:40px;height:40px;border-radius:50%;background:var(--teal);display:grid;place-items:center;color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:48px;padding:0 22px;border-radius:10px;font-weight:600}
+.btn-p{background:var(--teal-d);color:#fff}.btn-p:hover{background:#0f6a5e}
+.btn-o{background:#fff;border:1px solid var(--line)}
+.btn:disabled{opacity:.55;cursor:wait}
+.chip{display:inline-block;padding:4px 10px;border-radius:7px;font-size:12px;font-weight:600;white-space:nowrap}
+.c-red{background:var(--red-l);color:var(--red)}.c-amb{background:var(--amb-l);color:var(--amb)}.c-blue{background:var(--blue-l);color:var(--blue)}.c-grey{background:var(--grey-l);color:#4b5671}.c-green{background:var(--green-l);color:var(--green)}
+.field label{display:block;font-size:13px;font-weight:600;margin:0 0 8px}
+.input{display:flex;align-items:center;gap:12px;height:52px;border:1px solid var(--line);border-radius:10px;padding:0 16px;background:#fff;color:var(--muted)}
+.input input{border:0;outline:0;flex:1;color:var(--ink);background:none}
+/* ---------- auth ---------- */
+.auth{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
+.brand{background:var(--navy);color:#fff;position:relative;overflow:hidden;padding:72px;display:flex;flex-direction:column}
+.brand::before{content:"";position:absolute;width:520px;height:520px;border-radius:50%;background:var(--navy2);right:-200px;top:-180px}
+.brand::after{content:"";position:absolute;width:420px;height:420px;border-radius:50%;border:1.5px solid var(--teal);left:-280px;bottom:-280px}
+.brand>*{position:relative;z-index:1}
+.pitch{margin:auto 0}
+.pitch h1{font-size:50px;line-height:1.24;max-width:560px}
+.pitch p{color:#b9c3dc;font-size:17px;line-height:1.6;max-width:520px;margin:28px 0}
+.ben{display:flex;align-items:center;gap:12px;margin:14px 0;font-weight:500}
+.tick{width:24px;height:24px;border-radius:50%;background:var(--teal);display:grid;place-items:center}
+.tick svg{width:14px;height:14px;stroke-width:3}
+.brand small{color:#b9c3dc}
+.formside{display:grid;place-items:center;padding:40px}
+.acard{background:#fff;border-radius:18px;padding:44px;width:480px;box-shadow:0 10px 40px rgba(15,29,69,.08)}
+.acard h2{font-size:34px}.acard .sub{color:var(--muted);margin:8px 0 26px}
+.acard .field{margin-bottom:22px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;font-size:13px}
+.lnk{color:var(--teal-d);font-weight:600}
+.demo{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+.note{display:flex;gap:12px;background:var(--grey-l);border-radius:10px;padding:14px;color:#4b5671;font-size:13px;margin-bottom:22px}
+/* ---------- connect ---------- */
+.topbar{height:80px;background:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 56px;border-bottom:1px solid var(--line)}
+.stepper{display:flex;align-items:center;gap:16px;font-size:13px;font-weight:600}
+.sd{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-size:12px;border:1.5px solid var(--line);color:var(--muted)}
+.sd.done{background:var(--teal);border-color:var(--teal);color:#fff}.sd.cur{background:var(--teal-d);border-color:var(--teal-d);color:#fff}
+.sline{width:40px;height:2px;background:var(--line)}.sline.on{background:var(--teal)}
+.wrap{max-width:1248px;margin:0 auto;padding:44px 24px}
+.wrap>h1{font-size:40px}.wrap>.sub{color:var(--muted);margin:10px 0 32px}
+.ccards{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.ccard{background:#fff;border-radius:18px;padding:32px}
+.chead{display:flex;align-items:center;gap:16px;margin-bottom:22px}
+.cicon{width:52px;height:52px;border-radius:50%;background:var(--teal-l);color:var(--teal-d);display:grid;place-items:center}
+.chead h3{font-size:22px}.chead small{color:var(--muted)}
+.chead .chip{margin-left:auto}
+.ccard .field{margin-bottom:20px}
+.cfoot{display:flex;justify-content:space-between;align-items:center;margin-top:32px;color:var(--muted);font-size:13px}
+/* ---------- app ---------- */
+.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+.side{background:var(--navy);color:#fff;padding:28px 20px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.side .logo{margin:0 8px 28px;font-size:16.5px;white-space:nowrap}
+.nav{display:flex;align-items:center;gap:12px;height:48px;padding:0 14px;border-radius:10px;width:100%;color:#c9d2e8;font-weight:500;margin-bottom:8px}
+.nav:hover{background:rgba(255,255,255,.05)}.nav.on{background:var(--navy2);color:#fff}
+.nav .i{color:#8fa0c8}.nav.on .i{color:var(--teal)}
+.sstat{margin-top:auto;background:var(--navy2);border-radius:12px;padding:14px;display:flex;gap:10px;align-items:flex-start;font-size:13px}
+.dot{width:10px;height:10px;border-radius:50%;background:#2fd18b;margin-top:4px;flex:none}
+.sstat small{color:#9fb0d6;display:block;margin-top:2px}
+.user{display:flex;gap:12px;align-items:center;margin-top:14px;padding:0 8px}
+.av{width:40px;height:40px;border-radius:50%;background:var(--teal);display:grid;place-items:center;font-weight:700;font-size:14px}
+.user small{display:block;color:#9fb0d6;font-size:12px}
+.main{padding:36px 40px 110px;min-width:0}
+.head{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;gap:16px}
+.head h1{font-size:34px}.head .sub{color:var(--muted);margin-top:6px;font-size:13px}
+.acts{display:flex;gap:12px}
+.search{width:260px;height:48px;background:#fff;border:1px solid var(--line);border-radius:10px;display:flex;align-items:center;gap:10px;padding:0 15px;color:var(--muted)}
+.search input{border:0;outline:0;flex:1;background:none}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:24px}
+.stat{background:#fff;border-radius:16px;padding:20px;display:flex;gap:16px;align-items:center}
+.sic{width:48px;height:48px;border-radius:50%;display:grid;place-items:center}
+.stat small{color:var(--muted);font-size:13px}.stat b{display:block;font-family:Poppins;font-size:26px;font-weight:600;margin-top:2px}
+.grid2{display:grid;grid-template-columns:1fr 340px;gap:24px;align-items:start}
+.card{background:#fff;border-radius:16px;overflow:hidden}
+.ctitle{display:flex;justify-content:space-between;align-items:center;padding:20px 24px}
+.ctitle h3{font-size:19px}
+.filters{display:flex;gap:6px}
+.fl{padding:5px 14px;border-radius:8px;background:var(--grey-l);font-weight:600;font-size:13px;color:#4b5671}
+.fl.on{background:var(--navy);color:#fff}
+table{width:100%;border-collapse:collapse}
+th{background:#f6f8fb;text-align:left;font-size:11px;letter-spacing:.06em;color:var(--muted);font-weight:600;padding:13px 20px;white-space:nowrap}
+td.nw{white-space:nowrap}
+td{padding:12px 20px;border-top:1px solid var(--line);vertical-align:middle}
+.tt{display:flex;gap:12px;align-items:center}
+.cb{width:20px;height:20px;border:1.5px solid #c8cfdc;border-radius:5px;display:grid;place-items:center;flex:none;background:#fff}
+.cb.on{background:var(--teal);border-color:var(--teal);color:#fff}.cb svg{width:13px;height:13px;stroke-width:3}
+.tt b{font-weight:600;display:block}.tt small{color:var(--muted);font-size:12px}
+.done-row b{text-decoration:line-through;color:var(--muted)}
+.overdue{color:var(--red);font-weight:600}
+tr.flash td{animation:fl 1.8s}@keyframes fl{0%{background:#d9f5ef}100%{background:#fff}}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}.empty b{display:block;color:var(--ink);font-size:16px;margin-bottom:6px}
+.rem{padding:4px 24px 20px}
+.ritem{display:flex;gap:12px;align-items:center;margin:14px 0}
+.ric{width:40px;height:40px;border-radius:50%;background:var(--teal-l);color:var(--teal-d);display:grid;place-items:center;flex:none}
+.ritem b{font-weight:600;display:block;font-size:13.5px}.ritem small{color:var(--muted);font-size:12px}
+.tg{background:var(--navy);color:#fff;border-radius:16px;padding:24px;margin-top:24px}
+.tg .r{display:flex;gap:12px;align-items:center}
+.tgi{width:44px;height:44px;border-radius:50%;background:rgba(18,165,148,.2);color:var(--teal);display:grid;place-items:center}
+.tg h3{font-size:18px}.tg small{color:#9fb0d6}
+.tg p{color:#c9d2e8;font-size:13px;line-height:1.5;margin:16px 0}
+.tg .btn{width:100%;height:44px;background:var(--teal);color:#fff}
+/* board */
+.board{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.col{background:#e6ebf2;border-radius:16px;padding:14px;min-height:460px}
+.col h4{margin:4px 6px 14px;font-size:13px;color:#4b5671;display:flex;justify-content:space-between;text-transform:uppercase;letter-spacing:.05em}
+.yt{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 1px 2px rgba(15,29,69,.06);border-left:4px solid var(--teal)}
+.yt .id{font-size:12px;font-weight:700;color:var(--teal-d)}.yt .t{font-weight:600;margin:4px 0 10px}
+.yt .m{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted)}
+.yt .a{display:flex;gap:6px;margin-top:10px}.yt .a button{font-size:12px;font-weight:600;padding:5px 10px;border-radius:7px;background:var(--grey-l)}
+.yt.done{border-left-color:#c8cfdc}.yt.done .t{text-decoration:line-through;color:var(--muted)}
+/* log */
+.lstat{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:24px}
+/* settings */
+.sgrid{display:grid;grid-template-columns:1fr 380px;gap:24px;align-items:start}
+.scard{background:#fff;border-radius:16px;padding:28px;margin-bottom:24px}
+.scard h3{font-size:19px}.scard .s{color:var(--muted);font-size:13px;margin:4px 0 14px}
+.srow{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid var(--line)}
+.srow:first-of-type{border-top:0}
+.srow b{display:block;font-weight:600}.srow small{color:var(--muted);font-size:12px}
+.tgl{margin-left:auto;width:46px;height:26px;border-radius:20px;background:#c8cfdc;position:relative;flex:none}
+.tgl::after{content:"";position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;top:3px;left:3px;transition:.2s}
+.tgl.on{background:var(--teal)}.tgl.on::after{left:23px}
+.trange{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:10px}
+.code{background:var(--grey-l);border-radius:12px;text-align:center;padding:20px;margin:6px 0 18px}
+.code small{font-size:11px;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.code b{display:block;font-family:Poppins;font-size:44px;letter-spacing:.06em;margin:4px 0}
+.st{display:flex;gap:12px;align-items:center;margin:10px 0}
+.num{width:24px;height:24px;border-radius:50%;background:var(--teal-l);color:var(--teal-d);display:grid;place-items:center;font-size:12px;font-weight:700}
+/* ---------- phone ---------- */
+.phone{position:fixed;right:24px;bottom:84px;width:340px;height:700px;max-height:calc(100vh - 104px);border-radius:34px;background:#111;padding:9px;box-shadow:0 24px 60px rgba(15,29,69,.35);z-index:20;display:flex}
+.screen{flex:1;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;background:#fff}
+.sb{background:#3b6fa8;color:#fff;font-size:12px;font-weight:600;padding:8px 18px;display:flex;justify-content:space-between}
+.cbar{background:#4378b3;color:#fff;display:flex;align-items:center;gap:12px;padding:8px 12px}
+.cbar .mark{width:38px;height:38px}
+.cbar b{display:block;font-size:15px}.cbar small{opacity:.8;font-size:12px}
+.cbar .x{margin-left:auto;opacity:.9}
+.wall{flex:1;overflow:auto;padding:14px 10px;display:flex;flex-direction:column;gap:8px;background:linear-gradient(170deg,#9cb7e4,#b4a6dc 60%,#c7a5dd)}
+.day{align-self:center;background:rgba(40,60,110,.35);color:#fff;font-size:12px;padding:3px 10px;border-radius:12px;margin-bottom:4px}
+.bub{max-width:82%;background:#fff;border-radius:14px 14px 14px 4px;padding:8px 12px;font-size:13.5px;line-height:1.42;animation:pp .25s}
+.bub.me{align-self:flex-end;background:#e1fec6;border-radius:14px 14px 4px 14px}
+.bub .tm{font-size:10px;color:#8a93a6;text-align:right;margin-top:2px}
+.bub .h{font-weight:700}.h.blue{color:#2f7bd0}.h.red{color:#d93a3a}.h.green{color:#1c9a5a}
+.kb{display:flex;gap:3px;max-width:82%;margin-top:-4px}
+.kb button{flex:1;background:rgba(84,101,150,.7);color:#fff;border-radius:8px;padding:8px 4px;font-size:12.5px;font-weight:600}
+.kb button:disabled{opacity:.45}
+@keyframes pp{from{opacity:0;transform:translateY(5px)}}
+.ibar{display:flex;gap:6px;padding:8px;background:#fff;border-top:1px solid var(--line)}
+.ibar button{flex:1;background:var(--grey-l);border-radius:9px;padding:9px 4px;font-weight:600;font-size:12.5px}
+/* ---------- demo controls ---------- */
+.dc{position:fixed;left:276px;bottom:20px;background:var(--ink);color:#fff;border-radius:14px;padding:10px;display:flex;gap:6px;align-items:center;z-index:15;box-shadow:0 10px 30px rgba(15,29,69,.3);flex-wrap:wrap;max-width:calc(100vw - 300px)}
+.dc span{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:#9fb0d6;padding:0 6px}
+.dc button{background:rgba(255,255,255,.1);padding:7px 11px;border-radius:9px;font-size:12.5px;font-weight:600}
+.dc button:hover{background:rgba(255,255,255,.2)}
+.dc .clk{background:var(--teal-d)}
+.toast{position:fixed;top:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;z-index:30;opacity:0;transition:.3s;pointer-events:none}
+.toast.show{opacity:1}
+.spin{animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+<script>
+/* ---------------- icons ---------------- */
+const P={refresh:'<path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5M3 21v-5h5"/>',
+dash:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>',
+board:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16M15 4v16"/>',
+log:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h6"/>',
+sliders:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+search:'<circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/>',tasks:'<path d="m3 6 2 2 4-4M3 14l2 2 4-4M13 6h8M13 14h8M13 20h8"/>',
+cal:'<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 11h18"/>',alert:'<path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h0"/>',
+check:'<path d="M20 6 9 17l-5-5"/>',bell:'<path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/>',
+send:'<path d="m22 2-7 20-4-9-9-4z"/><path d="M22 2 11 13"/>',cap:'<path d="M22 10 12 5 2 10l10 5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/>',
+lock:'<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+user:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',layers:'<path d="m12 2 10 5-10 5L2 7z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/>',moon:'<path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/>',
+shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',x:'<path d="M18 6 6 18M6 6l12 12"/>',back:'<path d="m15 18-6-6 6-6"/>'};
+const ic=(n,s)=>`<svg class="i" viewBox="0 0 24 24"${s?` style="width:${s}px;height:${s}px"`:''}>${P[n]}</svg>`;
+/* ---------------- data ---------------- */
+const BASE=[
+ {eid:"lms-301",title:"Lab 3: ER diagrams",course:"Database Systems",due:[15,23,59]},
+ {eid:"lms-302",title:"Quiz 2: SQL basics",course:"Database Systems",due:[16,18,0]},
+ {eid:"lms-303",title:"Lab 4: Normalisation report",course:"Database Systems",due:[17,23,59]},
+ {eid:"lms-304",title:"Quiz 3: Agile frameworks",course:"Project Management",due:[18,10,0]},
+ {eid:"lms-305",title:"Assignment 2: REST API design",course:"Web Development",due:[20,18,0]},
+ {eid:"lms-306",title:"Homework 7: Graph theory",course:"Discrete Math",due:[22,23,59]},
+ {eid:"lms-307",title:"Team Project 2 – Part 2",course:"Project Management",due:[26,23,59]},
+ {eid:"lms-299",title:"Lab 2: Relational algebra",course:"Database Systems",due:[10,23,59],done:true}];
+const NEW={eid:"lms-308",title:"Lab 5: Indexes and query plans",course:"Database Systems",due:[23,23,59]};
+const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+let S, MO;
+const pad=n=>String(n).padStart(2,"0");
+const D=(d,h,m)=>new Date(2026,11,d,h,m);
+function reset(){
+  MO=JSON.parse(JSON.stringify(BASE));
+  S={screen:"signin",view:"dash",now:[17,12,30],portal:false,yt:false,issues:[],next:101,log:[],dup:0,created:0,filter:"all",q:"",
+     newPosted:false,phone:false,chat:[],reminded:false,quiet:true,rem:{d7:true,d3:true,d1:true,h3:true}};
+  seedLog();
+}
+function seedLog(){
+  S.log=[{t:"16 Dec, 22:00",trig:"Scheduled",res:"Success",c:0,u:0,d:0,det:"Account created — waiting for connections"}];
+}
+const hrs=due=>(D(...due)-D(...S.now))/36e5;
+function fmtDue(due){const[d,h,m]=due;const dd=d-S.now[0];const t=pad(h)+":"+pad(m);
+  if(dd===0)return"Today, "+t; if(dd===1)return"Tomorrow, "+t; if(dd===-1)return"Yesterday, "+t; return d+" Dec, "+t;}
+function left(i){
+  if(i.state==="Done")return["Done","c-green"];
+  const h=hrs(i.due);
+  if(h<0){const d=Math.ceil(-h/24);return["Overdue · "+d+"d","c-red"];}
+  if(h<24)return[Math.max(1,Math.floor(h))+" h left","c-red"];
+  const d=Math.floor(h/24); return[d+" day"+(d>1?"s":"")+" left",d<3?"c-amb":"c-grey"];
+}
+const stCls=s=>s==="Done"?"c-green":s==="In progress"?"c-blue":"c-grey";
+const clock=()=>`${DAYS[D(...S.now).getDay()]}, ${S.now[0]} December · ${pad(S.now[1])}:${pad(S.now[2])}`;
+const stamp=()=>`${S.now[0]} Dec, ${pad(S.now[1])}:${pad(S.now[2])}`;
+function toast(t){const e=document.getElementById("toast");e.textContent=t;e.classList.add("show");clearTimeout(e.t);e.t=setTimeout(()=>e.classList.remove("show"),2600);}
+function msg(who,html,kb){S.chat.push({who,html,kb,t:pad(S.now[1])+":"+pad(S.now[2])});}
+/* ---------------- logic ---------------- */
+function runSync(trigger,after){
+  const events=MO.concat(S.newPosted?[NEW]:[]);let c=0,u=0,d=0,flash=[];
+  for(const e of events){const ex=S.issues.find(i=>i.eid===e.eid);const h=e.title+e.due.join();
+    if(!ex){S.issues.push({id:"ST-"+(S.next++),eid:e.eid,title:e.title,course:e.course,due:[...e.due],h,state:e.done?"Done":(e.eid==="lms-302"||e.eid==="lms-305"?"In progress":"To do")});c++;flash.push(e.eid);}
+    else if(ex.h!==h){ex.due=[...e.due];ex.h=h;u++;flash.push(e.eid);}else d++;}
+  S.dup+=d;S.created+=c;
+  const det=c&&!u?`${c} new card${c>1?"s":""} created`:u?`${u} card updated (deadline changed in portal)`:"All deadlines are up to date";
+  S.log.unshift({t:stamp(),trig:trigger,res:"Success",c,u,d,det});S.lastSync=stamp();
+  return {c,u,d,flash};
+}
+function startFirstSync(btn){
+  if(!S.portal||!S.yt){toast("Connect both accounts first");return;}
+  btn.disabled=true;btn.innerHTML=ic("refresh",18).replace('class="i"','class="i spin"')+" Syncing…";
+  setTimeout(()=>{const r=runSync("First sync");S.screen="app";S.view="dash";render(r.flash);toast(`First sync: ${r.c} cards created in YouTrack`);},1100);
+}
+function syncNow(){
+  const b=document.getElementById("syncBtn");if(b){b.disabled=true;b.innerHTML=ic("refresh",18).replace('class="i"','class="i spin"')+" Syncing…";}
+  setTimeout(()=>{const r=runSync("Manual (Sync now)");toast(`Sync: ${r.c} created · ${r.u} updated · ${r.d} duplicates prevented`);render(r.flash);},900);
+}
+function setDone(id,from){
+  const i=S.issues.find(x=>x.id===id);if(!i||i.state==="Done")return;i.state="Done";
+  if(from==="tg"){msg("me","Mark as done");msg("bot",`<div class="h green">${i.title.split(":")[0]} is marked as done</div>The card ${i.id} in YouTrack is updated. Nice work!`);}
+  else msg("bot",`<div class="h green">${i.id} closed</div>“${i.title}” was marked as done on the website.`);
+  S.log.unshift({t:stamp(),trig:from==="tg"?"Telegram":"Website",res:"Success",c:0,u:1,d:0,det:`${i.id} status → Done`});
+  toast(i.id+" → Done");render([i.eid]);
+}
+function startWork(id){const i=S.issues.find(x=>x.id===id);i.state="In progress";render([i.eid]);}
+function demoNew(){S.newPosted=true;toast("Lecturer published “"+NEW.title+"” in the portal — press Sync now");render();}
+function demoMove(){const e=MO.find(x=>x.eid==="lms-305");e.due=[22,18,0];toast("Lecturer moved Assignment 2 to 22 Dec — press Sync now");render();}
+function demoReminder(){
+  if(!S.issues.length){toast("Run the first sync first");return;}
+  S.now=[17,20,59];const i=S.issues.find(x=>x.eid==="lms-303");
+  if(i&&i.state!=="Done"){msg("bot",`<div class="h red">Reminder: due in 3 hours</div><b>${i.title}</b><br>${i.course} · Today, 23:59<br><span style="color:#6b7690">YouTrack: ${i.id}</span>`,{id:i.id});}
+  S.log.unshift({t:stamp(),trig:"Reminder",res:"Success",c:0,u:0,d:0,det:"3-hour reminder sent to Telegram in 1.2 s"});
+  S.phone=true;render();toast("Clock moved to 20:59 — reminder sent");
+}
+function cmd(c){
+  msg("me",c);const open=S.issues.filter(i=>i.state!=="Done").sort((a,b)=>hrs(a.due)-hrs(b.due));
+  let L,h;if(c==="/today"){L=open.filter(i=>{const x=hrs(i.due);return x>=0&&x<24});h="Due today";}
+  else if(c==="/week"){L=open.filter(i=>{const x=hrs(i.due);return x>=0&&x<168});h="This week";}
+  else{L=open.filter(i=>hrs(i.due)<0);h="Overdue";}
+  msg("bot",`<div class="h blue">${h} (${L.length})</div>`+(L.length?L.map(i=>"• "+i.title+" · "+fmtDue(i.due)).join("<br>"):"Nothing here 🎉"),L.length&&c!=="/week"?{id:L[0].id}:null);
+  render();
+}
+/* ---------------- views ---------------- */
+const brand=()=>`<div class="brand"><div class="logo"><div class="mark">${ic("refresh",22)}</div>Assignment Sync</div>
+<div class="pitch"><h1>From scattered deadlines to one synced board</h1><p>Your learning portal, YouTrack and Telegram, working together so no deadline slips through.</p>
+<div class="ben"><span class="tick">${ic("check")}</span>Deadlines copied to YouTrack every 30 minutes</div>
+<div class="ben"><span class="tick">${ic("check")}</span>Reminders 7 days, 3 days, 1 day and 3 hours before</div>
+<div class="ben"><span class="tick">${ic("check")}</span>Mark tasks as done right from Telegram</div></div>
+<small>Team SE-2420 · Astana IT University</small></div>`;
+function vSignin(){return `<div class="auth">${brand()}<div class="formside"><div class="acard"><h2>Welcome back</h2><div class="sub">Sign in to see all your deadlines in one place.</div>
+<div class="field"><label>Email</label><div class="input">${ic("mail")}<input value="aigerim@astanait.edu.kz" readonly></div></div>
+<div class="field"><label>Password</label><div class="input">${ic("lock")}<input type="password" value="demo-password" readonly></div></div>
+<div class="row"><span style="display:flex;gap:10px;align-items:center"><span class="cb on">${ic("check")}</span>Remember me</span><span class="lnk">Forgot password?</span></div>
+<button class="btn btn-p" style="width:100%;height:54px" onclick="go('app')">Sign in ${ic("arrow",18)}</button>
+<div class="demo" style="font-size:14px;margin-top:22px">New here? <button class="lnk" onclick="go('signup')">Create an account</button></div>
+<div class="demo">Demo prototype — no real login, data is simulated.</div></div></div></div>`;}
+function vSignup(){return `<div class="auth">${brand()}<div class="formside"><div class="acard"><h2>Create your account</h2><div class="sub">It takes less than five minutes to connect everything.</div>
+<div class="field"><label>Full name</label><div class="input">${ic("user")}<input value="Aigerim Sadykova" readonly></div></div>
+<div class="field"><label>University email</label><div class="input">${ic("mail")}<input value="aigerim@astanait.edu.kz" readonly></div></div>
+<div class="field"><label>Password</label><div class="input">${ic("lock")}<input placeholder="At least 8 characters" readonly></div></div>
+<div class="note">${ic("lock",18)}Your access tokens are stored encrypted and are never shared.</div>
+<button class="btn btn-p" style="width:100%;height:54px" onclick="go('connect')">Create account ${ic("arrow",18)}</button>
+<div class="demo" style="font-size:14px;margin-top:22px">Already have an account? <button class="lnk" onclick="go('signin')">Sign in</button></div></div></div></div>`;}
+function vConnect(){
+  const card=(k,icn,t,sub,addrL,addr,tokL,okTxt)=>{const on=S[k];return `<div class="ccard"><div class="chead"><div class="cicon">${ic(icn,26)}</div><div><h3>${t}</h3><small>${sub}</small></div>
+  <span class="chip ${on?"c-green":"c-grey"}">${on?"Connected":"Not connected"}</span></div>
+  <div class="field"><label>${addrL}</label><div class="input">${ic("search",18)}<input value="${addr}" readonly></div></div>
+  <div class="field"><label>${tokL}</label><div class="input">${ic("lock",18)}<input value="••••••••••••••••••••" readonly></div></div>
+  ${on?`<div class="note" style="margin:0">${ic("check",18)}${okTxt}</div>`:`<button class="btn btn-o" style="width:100%" onclick="connect('${k}')">Connect ${t}</button>`}</div>`;};
+  const n=MO.filter(e=>!e.done).length+(S.newPosted?1:0);
+  return `<div class="topbar"><div class="logo"><div class="mark">${ic("refresh",22)}</div>Assignment Sync</div>
+  <div class="stepper"><span class="sd done">${ic("check",16)}</span>Create account<span class="sline on"></span><span class="sd cur">2</span>Connect accounts<span class="sline"></span><span class="sd">3</span><span style="color:var(--muted)">First sync</span></div>
+  <span style="color:var(--muted);font-size:13px">Step 2 of 3</span></div>
+  <div class="wrap"><h1>Connect your accounts</h1><div class="sub">Link your learning portal and YouTrack once. We will do the copying for you from now on.</div>
+  <div class="ccards">${card("portal","cap","Learning portal","Moodle-compatible, read-only","Portal address","https://lms.example.edu","Access token",`Found ${n} upcoming deadlines in 5 courses`)}
+  ${card("yt","tasks","YouTrack","Where your task cards are created","YouTrack address","https://studyboard.youtrack.cloud","Permanent token",`Project “Study Tasks (ST)” is ready for new cards`)}</div>
+  <div class="cfoot"><span style="display:flex;gap:10px;align-items:center">${ic("shield",20)}Tokens are encrypted and we never write anything back to the portal.</span>
+  <button class="btn btn-p" onclick="startFirstSync(this)">${ic("refresh",18)} Start first sync ${ic("arrow",18)}</button></div></div>`;
+}
+function sidebar(){
+  const n=(v,i,t)=>`<button class="nav ${S.view===v?"on":""}" onclick="nav('${v}')">${ic(i)}${t}</button>`;
+  return `<aside class="side"><div class="logo"><div class="mark">${ic("refresh",22)}</div>Assignment Sync</div>
+  ${n("dash","dash","Dashboard")}${n("board","board","YouTrack board")}${n("log","log","Sync log")}${n("settings","sliders","Settings")}
+  <div class="sstat"><span class="dot"></span><div>All systems synced<small>Last run: ${S.lastSync||"—"}</small></div></div>
+  <div class="user"><div class="av">AS</div><div>Aigerim Sadykova<small>aigerim@astanait.edu.kz</small></div></div></aside>`;
+}
+function vDash(flash){
+  const open=S.issues.filter(i=>i.state!=="Done");
+  const week=open.filter(i=>{const h=hrs(i.due);return h>=0&&h<168}).length, od=open.filter(i=>hrs(i.due)<0).length;
+  let rows=[...S.issues].sort((a,b)=>(a.state==="Done")-(b.state==="Done")||hrs(a.due)-hrs(b.due));
+  if(S.filter==="week")rows=rows.filter(i=>i.state!=="Done"&&hrs(i.due)>=0&&hrs(i.due)<168);
+  if(S.filter==="over")rows=rows.filter(i=>i.state!=="Done"&&hrs(i.due)<0);
+  if(S.q)rows=rows.filter(i=>(i.title+i.course+i.id).toLowerCase().includes(S.q.toLowerCase()));
+  const stat=(icn,bg,col,l,v)=>`<div class="stat"><div class="sic" style="background:${bg};color:${col}">${ic(icn,24)}</div><div><small>${l}</small><b>${v}</b></div></div>`;
+  const total=S.issues.length;
+  const rem=open.filter(i=>hrs(i.due)>0).sort((a,b)=>hrs(a.due)-hrs(b.due)).slice(0,3);
+  return `<div class="head"><div><h1>Dashboard</h1><div class="sub">${clock()} · Last sync ${S.lastSync||"—"}</div></div>
+  <div class="acts"><div class="search">${ic("search",18)}<input placeholder="Search tasks" value="${S.q}" oninput="S.q=this.value;renderTable()"></div>
+  <button class="btn btn-p" id="syncBtn" onclick="syncNow()">${ic("refresh",18)} Sync now</button></div></div>
+  <div class="stats">${stat("tasks","#e9efff","#3157d5","Open tasks",open.length)}${stat("cal","#fff1dc","#c77a0a","Due in 7 days",week)}${stat("alert","#fde8e8","#d93a3a","Overdue",od)}${stat("check","#e0f6ea","#1c9a5a","Synced to YouTrack",total+" of "+total)}</div>
+  <div class="grid2"><div class="card"><div class="ctitle"><h3>Upcoming deadlines</h3><div class="filters">
+  <button class="fl ${S.filter==="all"?"on":""}" onclick="filt('all')">All</button><button class="fl ${S.filter==="week"?"on":""}" onclick="filt('week')">This week</button><button class="fl ${S.filter==="over"?"on":""}" onclick="filt('over')">Overdue</button></div></div>
+  <div id="tbl">${table(rows,flash)}</div></div>
+  <div><div class="card"><div class="ctitle" style="padding-bottom:0"><h3>Next reminders</h3></div><div class="rem">
+  ${rem.length?rem.map(i=>{const h=hrs(i.due);const lab=h<24?"in "+Math.floor(h)+" hours":"in "+Math.floor(h/24)+" day"+(Math.floor(h/24)>1?"s":"");return `<div class="ritem"><div class="ric">${ic("bell",20)}</div><div><b>${i.title}</b><small>${lab} · ${fmtDue(i.due)}</small></div></div>`}).join(""):`<div class="empty" style="padding:20px 0">No reminders yet</div>`}</div></div>
+  <div class="tg"><div class="r"><div class="tgi">${ic("send",22)}</div><div><h3>Telegram bot</h3><small>@assignment_sync_bot</small></div></div>
+  <p>Linked. You get reminders and can mark tasks done from the chat.</p><button class="btn" onclick="S.phone=!S.phone;render()">${S.phone?"Hide bot":"Open bot"}</button></div></div></div>`;
+}
+function table(rows,flash=[]){
+  if(!S.issues.length)return `<div class="empty"><b>No deadlines yet</b>Connect your accounts and run the first sync.</div>`;
+  if(!rows.length)return `<div class="empty">Nothing matches this filter.</div>`;
+  return `<table><tr><th>TASK</th><th>DUE</th><th>TIME LEFT</th><th>STATUS</th><th>CARD</th></tr>`+rows.map(i=>{const[l,c]=left(i);const od=i.state!=="Done"&&hrs(i.due)<0;
+  return `<tr class="${flash.includes(i.eid)?"flash":""} ${i.state==="Done"?"done-row":""}"><td><div class="tt"><button class="cb ${i.state==="Done"?"on":""}" onclick="setDone('${i.id}','web')" title="Mark as done">${i.state==="Done"?ic("check"):""}</button><div><b>${i.title}</b><small>${i.course}</small></div></div></td>
+  <td class="nw ${od?"overdue":""}">${fmtDue(i.due)}</td><td><span class="chip ${c}">${l}</span></td><td><span class="chip ${stCls(i.state)}">${i.state}</span></td><td class="nw" style="color:var(--teal-d);font-weight:700;font-size:13px">${i.id}</td></tr>`}).join("")+`</table>`;
+}
+function vBoard(flash){
+  const col=(s,t)=>{const L=S.issues.filter(i=>i.state===s);return `<div class="col"><h4>${t}<span>${L.length}</span></h4>${L.map(i=>{const[l,c]=left(i);return `<div class="yt ${s==="Done"?"done":""}" ${flash.includes(i.eid)?'style="animation:fl 1.8s"':""}><div class="id">${i.id}</div><div class="t">${i.title}</div>
+  <div class="m"><span class="chip c-grey">${i.course}</span><span>${ic("cal",14)} ${fmtDue(i.due)}</span><span class="chip ${c}">${l}</span></div>
+  ${s!=="Done"?`<div class="a">${s==="To do"?`<button onclick="startWork('${i.id}')">Start</button>`:""}<button onclick="setDone('${i.id}','web')">Done</button></div>`:""}</div>`}).join("")||`<div class="empty" style="padding:30px 0">Empty</div>`}</div>`;};
+  return `<div class="head"><div><h1>YouTrack board</h1><div class="sub">Project “Study Tasks (ST)” · cards created by Assignment Sync · status changes sync both ways</div></div>
+  <button class="btn btn-p" id="syncBtn" onclick="syncNow()">${ic("refresh",18)} Sync now</button></div>
+  <div class="board">${col("To do","To do")}${col("In progress","In progress")}${col("Done","Done")}</div>`;
+}
+function vLog(){
+  const stat=(icn,bg,col,l,v)=>`<div class="stat"><div class="sic" style="background:${bg};color:${col}">${ic(icn,24)}</div><div><small>${l}</small><b>${v}</b></div></div>`;
+  return `<div class="head"><div><h1>Sync log</h1><div class="sub">Every run of the 30-minute scheduler. Failed items are retried automatically.</div></div>
+  <button class="btn btn-p" id="syncBtn" onclick="syncNow()">${ic("refresh",18)} Sync now</button></div>
+  <div class="lstat">${stat("clock","#e9efff","#3157d5","Last run",S.lastSync?S.lastSync.split(", ")[1]:"—")}${stat("plus","#e0f6ea","#1c9a5a","Cards created",S.created)}${stat("layers","#fff1dc","#c77a0a","Duplicates prevented",S.dup)}${stat("alert","#fde8e8","#d93a3a","Failed, then retried",0)}</div>
+  <div class="card"><div class="ctitle"><h3>Recent runs</h3></div><table><tr><th>TIME</th><th>TRIGGER</th><th>RESULT</th><th>CREATED</th><th>UPDATED</th><th>DUPLICATES</th><th>DETAILS</th></tr>
+  ${S.log.map(r=>`<tr><td>${r.t}</td><td>${r.trig}</td><td><span class="chip c-green">${r.res}</span></td><td>${r.c}</td><td>${r.u}</td><td>${r.d}</td><td>${r.det}</td></tr>`).join("")}</table></div>`;
+}
+function vSettings(){
+  const tr=(k,t,s)=>`<div class="srow"><div class="ric">${ic("bell",20)}</div><div><b>${t}</b><small>${s}</small></div><button class="tgl ${S.rem[k]?"on":""}" onclick="S.rem.${k}=!S.rem.${k};render()"></button></div>`;
+  return `<div class="head"><div><h1>Settings</h1><div class="sub">Choose when and how you want to be reminded.</div></div>
+  <button class="btn btn-p" onclick="toast('Settings saved')">${ic("check",18)} Save changes</button></div>
+  <div class="sgrid"><div><div class="scard"><h3>Reminders</h3><div class="s">Telegram messages sent before each deadline.</div>
+  ${tr("d7","7 days before","A first heads-up when a deadline appears on your radar")}${tr("d3","3 days before","Time to plan the work")}${tr("d1","1 day before","Last full day to finish")}${tr("h3","3 hours before","Final nudge, even for late-night deadlines")}</div>
+  <div class="scard"><h3>Quiet hours</h3><div class="s">Reminders that fall in this window are sent when it ends.</div>
+  <div class="srow"><div class="ric">${ic("moon",20)}</div><div><b>Do not disturb</b><small>Time zone: Astana (UTC+5)</small></div><button class="tgl ${S.quiet?"on":""}" onclick="S.quiet=!S.quiet;render()"></button></div>
+  <div class="trange"><div class="field"><label>From</label><div class="input">${ic("clock",18)}<input value="22:00" readonly></div></div><div class="field"><label>To</label><div class="input">${ic("clock",18)}<input value="07:00" readonly></div></div></div></div></div>
+  <div><div class="scard"><h3>Telegram</h3><div class="s">Link the bot with a one-time code.</div>
+  <div class="code"><small>YOUR ONE-TIME CODE</small><b>482 913</b><span style="color:var(--muted);font-size:13px">Expires in 09:41</span></div>
+  <div class="st"><span class="num">1</span>Open @assignment_sync_bot</div><div class="st"><span class="num">2</span>Send /start</div><div class="st"><span class="num">3</span>Enter the code above</div>
+  <button class="btn btn-p" style="width:100%;margin-top:12px" onclick="S.phone=true;render()">${ic("send",18)} Open Telegram</button></div>
+  <div class="scard"><h3>Connected accounts</h3>
+  <div class="srow"><div class="ric">${ic("cap",20)}</div><div><b>Learning portal</b><small>lms.example.edu</small></div><span class="chip c-green" style="margin-left:auto">Connected</span></div>
+  <div class="srow"><div class="ric">${ic("tasks",20)}</div><div><b>YouTrack</b><small>studyboard.youtrack.cloud</small></div><span class="chip c-green" style="margin-left:auto">Connected</span></div></div></div></div>`;
+}
+function phone(){
+  if(!S.phone)return"";
+  return `<div class="phone"><div class="screen"><div class="sb"><span>${pad(S.now[1])}:${pad(S.now[2])}</span><span>▾ ▮</span></div>
+  <div class="cbar">${ic("back",24)}<div class="mark">${ic("refresh",20)}</div><div><b>Assignment Sync</b><small>bot</small></div><button class="x" onclick="S.phone=false;render()" title="Close">${ic("x",20)}</button></div>
+  <div class="wall" id="wall"><div class="day">December 17</div>
+  ${S.chat.map(m=>`<div class="bub ${m.who==="me"?"me":""}">${m.html}<div class="tm">${m.t}${m.who==="me"?" ✓✓":""}</div></div>${m.kb?`<div class="kb"><button onclick="setDone('${m.kb.id}','tg')" ${S.issues.find(i=>i.id===m.kb.id)?.state==="Done"?"disabled":""}>Mark as done</button><button onclick="toast('Opens ${m.kb.id} in YouTrack')">Open in YouTrack</button></div>`:""}`).join("")}</div>
+  <div class="ibar"><button onclick="cmd('/today')">/today</button><button onclick="cmd('/week')">/week</button><button onclick="cmd('/overdue')">/overdue</button></div></div></div>`;
+}
+function demoBar(){
+  return `<div class="dc"><span>Demo</span><button onclick="demoNew()">＋ New lab in portal</button><button onclick="demoReminder()">⏰ Reminder (20:59)</button><button onclick="demoMove()">↔ Move a deadline</button><button onclick="S.phone=!S.phone;render()">📱 ${S.phone?"Hide":"Show"} bot</button><button class="clk" onclick="fullReset()">↺ Reset</button></div>`;
+}
+/* ---------------- router ---------------- */
+function render(flash=[]){
+  const r=document.getElementById("root");
+  if(S.screen==="signin")r.innerHTML=vSignin();
+  else if(S.screen==="signup")r.innerHTML=vSignup();
+  else if(S.screen==="connect")r.innerHTML=vConnect();
+  else{const v={dash:vDash,board:vBoard,log:vLog,settings:vSettings}[S.view](flash);r.innerHTML=`<div class="app">${sidebar()}<main class="main">${v}</main></div>${phone()}${demoBar()}`;
+    const w=document.getElementById("wall");if(w)w.scrollTop=w.scrollHeight;}
+}
+function renderTable(){let rows=[...S.issues].filter(i=>(i.title+i.course+i.id).toLowerCase().includes(S.q.toLowerCase()));document.getElementById("tbl").innerHTML=table(rows);}
+function go(s){
+  if(s==="app"&&!S.issues.length){s="connect";} // first login → onboarding
+  S.screen=s;render();
+}
+function nav(v){S.view=v;render();}
+function filt(f){S.filter=f;render();}
+function connect(k){S[k]=true;toast((k==="portal"?"Learning portal":"YouTrack")+" connected");
+  if(S.portal&&S.yt&&!S.chat.length){msg("me","/start");msg("bot",`<div class="h">Welcome to Assignment Sync</div>Send me the one-time code from your web settings to link your account.`);msg("me","482913");msg("bot",`<div class="h green">Account linked</div>Hello, Aigerim! I will remind you 7 days, 3 days, 1 day and 3 hours before each deadline.<br>Try /today, /week or /overdue`);}
+  render();}
+function fullReset(){reset();render();toast("Demo reset");}
+reset();render();
+</script>
+</body>
+</html>
